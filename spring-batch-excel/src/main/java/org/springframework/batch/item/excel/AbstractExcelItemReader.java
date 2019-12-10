@@ -50,6 +50,10 @@ public abstract class AbstractExcelItemReader<T> extends AbstractItemCountingIte
     private RowSetFactory rowSetFactory = new DefaultRowSetFactory();
     private RowSet rs;
 
+    public void setCurrentSheet(int index){
+        this.currentSheet = index;
+    }
+
     public AbstractExcelItemReader() {
         super();
         this.setName(ClassUtils.getShortName(this.getClass()));
