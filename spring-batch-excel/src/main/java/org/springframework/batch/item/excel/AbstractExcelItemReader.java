@@ -49,10 +49,13 @@ public abstract class AbstractExcelItemReader<T> extends AbstractItemCountingIte
     private boolean strict = true;
     private RowSetFactory rowSetFactory = new DefaultRowSetFactory();
     private RowSet rs;
+    private boolean isMultiSheets = false;
 
     public void setCurrentSheet(int index){
         this.currentSheet = index;
     }
+
+    public void setMultiSheets(boolean v) {this.isMultiSheets = v;}
 
     public AbstractExcelItemReader() {
         super();
@@ -76,7 +79,7 @@ public abstract class AbstractExcelItemReader<T> extends AbstractItemCountingIte
                 throw new ExcelFileParseException("Exception parsing Excel file.", e, this.resource.getDescription(),
                         rs.getMetaData().getSheetName(), rs.getCurrentRowIndex(), rs.getCurrentRow());
             }
-        } else {
+        } else if (isMultiSheets) {
             this.currentSheet++;
             if (this.currentSheet >= this.getNumberOfSheets()) {
                 if (logger.isDebugEnabled()) {
@@ -87,6 +90,8 @@ public abstract class AbstractExcelItemReader<T> extends AbstractItemCountingIte
                 this.openSheet();
                 return this.doRead();
             }
+        } else {
+            return null;
         }
     }
 
